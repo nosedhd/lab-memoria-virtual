@@ -1,10 +1,11 @@
-// main.cpp — composition root
+int main(int argc, char** argv) {
+    /*
 #include <memory>
 #include "application/MMU.hpp"
 #include "application/FifoPolicy.hpp"
 #include "infrastructure/FileCommandSource.hpp"
 #include "infrastructure/ConsoleStatsReporter.hpp"
-int main(int argc, char** argv) {
+
     domain::PhysicalMemory mem(config::PHYSICAL_FRAMES);
 
     std::unique_ptr<domain::IReplacementPolicy> policy =
@@ -21,5 +22,8 @@ int main(int argc, char** argv) {
         mmu.execute(cmd);
 
     reporter->report(mmu.getStats());
-    return 0;
+    return 0;*/
+    (void)argc;
+    (void)argv;
+    return 1;
 }

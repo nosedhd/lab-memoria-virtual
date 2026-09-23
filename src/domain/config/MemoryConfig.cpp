@@ -8,7 +8,7 @@ MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
             frame_count_(0),
             offset_bits_(0),
             directory_index_bits_(0),
-            page_index_bits_(0) {
+            page_table_index_bits_(0) {
         if (!isPowerOfTwo(page_size)) {
             throw std::invalid_argument("El tamaño de la pagina debe ser potencia de dos");
         }
@@ -24,9 +24,10 @@ MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
 
         frame_count_ = physical_memory_size / page_size;
         offset_bits_ = computeOffsetBits(page_size);
-        page_index_bits_ = 10;
-        directory_index_bits_ =
-            computeDirectoryIndexBits(VIRTUAL_ADDRESS_BITS - offset_bits_);
+
+        const uint32_t vpn_bits = VIRTUAL_ADDRESS_BITS - offset_bits_;
+        directory_index_bits_ = computeDirectoryIndexBits(vpn_bits);
+        page_table_index_bits_ = vpn_bits - directory_index_bits_;
     }
 
 uint32_t MemoryConfig::getPageSize() const { return page_size_; }
@@ -34,7 +35,7 @@ uint32_t MemoryConfig::getPhysicalMemorySize() const { return physical_memory_si
 uint32_t MemoryConfig::getFrameCount() const { return frame_count_; }
 uint32_t MemoryConfig::getOffsetBits() const { return offset_bits_; }
 uint32_t MemoryConfig::getDirectoryIndexBits() const { return directory_index_bits_; }
-uint32_t MemoryConfig::getPageIndexBits() const { return page_index_bits_; }
+uint32_t MemoryConfig::getPageTableIndexBits() const { return page_table_index_bits_; }
 
 
 bool MemoryConfig::isPowerOfTwo(uint32_t value) {
@@ -65,5 +66,5 @@ uint32_t MemoryConfig::computeOffsetBits(uint32_t page_size) {
 }
 
 uint32_t MemoryConfig::computeDirectoryIndexBits(uint32_t vpn_bits) {
-    return vpn_bits - 10;
+    return (vpn_bits + 1) / 2;
 }

@@ -11,7 +11,7 @@ public:
     uint32_t getFrameCount() const;
     uint32_t getOffsetBits() const;
     uint32_t getDirectoryIndexBits() const;
-    uint32_t getPageIndexBits() const;
+    uint32_t getPageTableIndexBits() const;
 
     static constexpr uint32_t VIRTUAL_ADDRESS_BITS = 32;
     static constexpr uint32_t TLB_SIZE = 16;
@@ -37,5 +37,5 @@ private:
     uint32_t frame_count_;
     uint32_t offset_bits_;
     uint32_t directory_index_bits_;
-    uint32_t page_index_bits_;
+    uint32_t page_table_index_bits_;
 };
