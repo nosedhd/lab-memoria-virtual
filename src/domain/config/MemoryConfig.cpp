@@ -1,10 +1,14 @@
-#include "MemoryConfig.hpp"
+#include "domain/config/MemoryConfig.hpp"
 #include <string>
 #include <cmath>
 
 MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
-    :page_size_(page_size), physical_memory_size_(physical_memory_size)
-    {
+        : page_size_(page_size),
+            physical_memory_size_(physical_memory_size),
+            frame_count_(0),
+            offset_bits_(0),
+            directory_index_bits_(0),
+            page_index_bits_(0) {
         if (!isPowerOfTwo(page_size)) {
             throw std::invalid_argument("El tamaño de la pagina debe ser potencia de dos");
         }
@@ -19,6 +23,10 @@ MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
         }
 
         frame_count_ = physical_memory_size / page_size;
+        offset_bits_ = computeOffsetBits(page_size);
+        page_index_bits_ = 10;
+        directory_index_bits_ =
+            computeDirectoryIndexBits(VIRTUAL_ADDRESS_BITS - offset_bits_);
     }
 
 uint32_t MemoryConfig::getPageSize() const { return page_size_; }
@@ -30,8 +38,7 @@ uint32_t MemoryConfig::getPageIndexBits() const { return page_index_bits_; }
 
 
 bool MemoryConfig::isPowerOfTwo(uint32_t value) {
-    //to do
-    return true;
+    return value != 0 && (value & (value - 1)) == 0;
 }
 
 bool MemoryConfig::isPageSizeInRange(uint32_t page_size) {
@@ -49,11 +56,14 @@ bool MemoryConfig::isMultipleOfPageSize(uint32_t physical_memory_size, uint32_t 
 }
 
 uint32_t MemoryConfig::computeOffsetBits(uint32_t page_size) {
-    //to do
-    return 1;
+    uint32_t bits = 0;
+    while (page_size > 1) {
+        page_size >>= 1;
+        ++bits;
+    }
+    return bits;
 }
 
 uint32_t MemoryConfig::computeDirectoryIndexBits(uint32_t vpn_bits) {
-   //to do
-   return 1;
+    return vpn_bits - 10;
 }

@@ -30,7 +30,7 @@ private:
 
     static uint32_t computeOffsetBits(uint32_t page_size);
 
-    static uint32_t computeVpnBits(uint32_t vpn_bits);
+    static uint32_t computeDirectoryIndexBits(uint32_t vpn_bits);
 
     uint32_t page_size_;
     uint32_t physical_memory_size_;
