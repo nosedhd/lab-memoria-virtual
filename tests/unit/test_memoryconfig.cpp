@@ -11,7 +11,7 @@ void test_valid_configuration() {
 	assert(config.getFrameCount() == 64);
 	assert(config.getOffsetBits() == 12);
 	assert(config.getDirectoryIndexBits() == 10);
-	assert(config.getPageIndexBits() == 10);
+	assert(config.getPageTableIndexBits() == 10);
 }
 
 void test_different_page_size() {
@@ -19,8 +19,8 @@ void test_different_page_size() {
 
 	assert(config.getFrameCount() == 32);
 	assert(config.getOffsetBits() == 13);
-	assert(config.getDirectoryIndexBits() == 9);
-	assert(config.getPageIndexBits() == 10);
+	assert(config.getDirectoryIndexBits() == 10);
+	assert(config.getPageTableIndexBits() == 9);
 }
 
 void test_invalid_configurations() {

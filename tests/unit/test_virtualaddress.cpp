@@ -16,7 +16,7 @@ void test_address_decomposition() {
 
     assert(address.getRaw() == raw_address);
     assert(address.getDirectoryIndex() == directory_index);
-    assert(address.getTableIndex() == table_index);
+    assert(address.getPageTableIndex() == table_index);
     assert(address.getOffset() == offset);
     assert(address.getVpn() == ((directory_index << 10) | table_index));
 }
@@ -26,7 +26,7 @@ void test_address_boundaries() {
     const VirtualAddress address(0xFFFFFFFFU, config);
 
     assert(address.getDirectoryIndex() == 1023);
-    assert(address.getTableIndex() == 1023);
+    assert(address.getPageTableIndex() == 1023);
     assert(address.getOffset() == 4095);
     assert(address.getVpn() == 0xFFFFF);
 }

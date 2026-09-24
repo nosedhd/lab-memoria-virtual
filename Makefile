@@ -46,13 +46,19 @@ OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
 # Tests implementados actualmente. test_mmu.cpp se incorporara cuando tenga main.
 TEST_SRCS := $(TEST_DIR)/test_memoryconfig.cpp \
-             $(TEST_DIR)/test_virtualaddress.cpp
+             $(TEST_DIR)/test_virtualaddress.cpp \
+             $(TEST_DIR)/test_directorytableentry.cpp \
+             $(TEST_DIR)/test_directorytable.cpp
 TEST_BINS := $(patsubst $(TEST_DIR)/%.cpp,$(BIN_DIR)/%$(EXE_EXT),$(TEST_SRCS))
 TEST_BINS_WIN := $(subst /,\,$(TEST_BINS))
 
 # Dependencias necesarias para los tests actuales, sin incluir main.cpp.
 TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
-                  $(SRCDIR)/domain/paging/VirtualAdress.cpp
+                  $(SRCDIR)/domain/paging/VirtualAdress.cpp \
+                  $(SRCDIR)/domain/paging/DirectoryTableEntry.cpp \
+                  $(SRCDIR)/domain/paging/DirectoryTable.cpp \
+                  $(SRCDIR)/domain/paging/PageTable.cpp \
+                  $(SRCDIR)/domain/paging/PageTableEntry.cpp
 
 # ---------------------------------------------------------
 # Targets principales
