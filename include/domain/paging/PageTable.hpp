@@ -5,11 +5,11 @@
  
 class PageTable {
 public:
-    explicit PageTable(uint32_t entry_count);
+    explicit PageTable(uint32_t page_table_entry_count);
  
-    PageTableEntry& getEntry(uint32_t index);
+    PageTableEntry& getEntry(uint32_t page_table_index);
 
 private:
-    void validateIndex(uint32_t index) const;
+    void validateIndex(uint32_t page_table_index) const;
     std::vector<PageTableEntry> entries_;
 };

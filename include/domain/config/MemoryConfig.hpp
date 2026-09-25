@@ -12,6 +12,8 @@ public:
     uint32_t getOffsetBits() const;
     uint32_t getDirectoryIndexBits() const;
     uint32_t getPageTableIndexBits() const;
+    uint32_t getDirectoryEntryCount() const;
+    uint32_t getPageTableEntryCount() const;
 
     static constexpr uint32_t VIRTUAL_ADDRESS_BITS = 32;
     static constexpr uint32_t TLB_SIZE = 16;

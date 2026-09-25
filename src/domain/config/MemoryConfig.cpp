@@ -68,3 +68,11 @@ uint32_t MemoryConfig::computeOffsetBits(uint32_t page_size) {
 uint32_t MemoryConfig::computeDirectoryIndexBits(uint32_t vpn_bits) {
     return (vpn_bits + 1) / 2;
 }
+
+uint32_t MemoryConfig::getDirectoryEntryCount() const{
+    return static_cast<uint32_t>(std::pow(2, getDirectoryIndexBits()));
+}
+
+uint32_t MemoryConfig::getPageTableEntryCount() const{
+    return static_cast<uint32_t>(std::pow(2, getPageTableIndexBits()));
+}

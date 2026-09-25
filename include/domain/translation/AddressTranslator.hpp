@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 
 #include <memory>
 #include "domain/PhysicalMemory.hpp"
@@ -23,3 +23,5 @@ private:
 };
 
 } // namespace application
+
+*/
