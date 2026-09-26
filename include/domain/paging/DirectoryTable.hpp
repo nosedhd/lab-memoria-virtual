@@ -15,6 +15,8 @@ public:
 	const DirectoryTableEntry& getEntry(uint32_t index) const;
 
 	bool hasPageTable(uint32_t directory_index) const;
+	PageTable* getPageTable(uint32_t directory_index);
+	const PageTable* getPageTable(uint32_t directory_index) const;
 	PageTable& getOrCreatePageTable(  
 		uint32_t directory_index, uint32_t entries_per_table);
 

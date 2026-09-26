@@ -22,6 +22,16 @@ bool DirectoryTable::hasPageTable(uint32_t dir_index) const {
     return page_tables_[dir_index] != nullptr;
 }
 
+PageTable* DirectoryTable::getPageTable(uint32_t dir_index) {
+    validateIndex(dir_index);
+    return page_tables_[dir_index].get();
+}
+
+const PageTable* DirectoryTable::getPageTable(uint32_t dir_index) const {
+    validateIndex(dir_index);
+    return page_tables_[dir_index].get();
+}
+
 PageTable& DirectoryTable::getOrCreatePageTable(
     uint32_t dir_index, uint32_t entries_per_table) {
     validateIndex(dir_index);

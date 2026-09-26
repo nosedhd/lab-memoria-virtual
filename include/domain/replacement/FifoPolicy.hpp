@@ -2,7 +2,7 @@
 
 #include <queue>
 #include <string>
-#include "domain/replacement/IReplacementPolicy.hpp"
+#include "IReplacementPolicy.hpp"
 
 namespace application {
 class FifoPolicy : public domain::IReplacementPolicy {

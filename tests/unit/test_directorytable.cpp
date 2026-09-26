@@ -7,16 +7,19 @@ void test_creates_and_reuses_page_table() {
     DirectoryTable directory(4);
 
     assert(!directory.hasPageTable(2));
+    assert(directory.getPageTable(2) == nullptr);
     assert(!directory.getEntry(2).getValidBit());
 
     PageTable& first_table = directory.getOrCreatePageTable(2, 8);
 
     assert(directory.hasPageTable(2));
+    assert(directory.getPageTable(2) == &first_table);
     assert(directory.getEntry(2).getValidBit());
     assert(directory.getEntry(2).getPtn() == 2);
 
     PageTable& same_table = directory.getOrCreatePageTable(2, 16);
     assert(&first_table == &same_table);
+    assert(directory.getPageTable(2) == &same_table);
 }
 
 void test_rejects_invalid_arguments() {
