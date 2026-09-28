@@ -51,7 +51,8 @@ TEST_SRCS := $(TEST_DIR)/test_memoryconfig.cpp \
              $(TEST_DIR)/test_directorytableentry.cpp \
              $(TEST_DIR)/test_directorytable.cpp \
              $(TEST_DIR)/test_frametable.cpp \
-             $(TEST_DIR)/test_physicalmemory.cpp
+             $(TEST_DIR)/test_physicalmemory.cpp \
+             $(TEST_DIR)/test_tlb.cpp
 TEST_BINS := $(patsubst $(TEST_DIR)/%.cpp,$(BIN_DIR)/%$(EXE_EXT),$(TEST_SRCS))
 TEST_BINS_WIN := $(subst /,\,$(TEST_BINS))
 
@@ -63,7 +64,8 @@ TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
                   $(SRCDIR)/domain/paging/PageTable.cpp \
                   $(SRCDIR)/domain/paging/PageTableEntry.cpp \
                   $(SRCDIR)/domain/memory/FrameTable.cpp \
-                  $(SRCDIR)/domain/memory/PhysicalMemory.cpp
+                  $(SRCDIR)/domain/memory/PhysicalMemory.cpp \
+                  $(SRCDIR)/domain/memory/TLB.cpp
 
 # ---------------------------------------------------------
 # Targets principales
