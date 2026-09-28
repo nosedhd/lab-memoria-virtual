@@ -36,6 +36,7 @@ uint32_t MemoryManager::resolvePhysicalAddress(uint32_t virtual_address, AccessT
     const VirtualAddress va(virtual_address, config_);
     TranslationResult translation = translator_.translate(va);
     stats_.recordAccess();
+    clock_.tick();
     if (translation.tlb_hit) {
         stats_.recordTlbHit();
     }
@@ -82,6 +83,10 @@ void MemoryManager::free(uint32_t virtual_address) {
 
 const Stats& MemoryManager::getStats() const {
     return stats_;
+}
+
+const Tick& MemoryManager::getClock() const {
+    return clock_;
 }
 
 const MemoryConfig& MemoryManager::getConfig() const {

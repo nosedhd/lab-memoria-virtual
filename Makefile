@@ -59,6 +59,7 @@ TEST_SRCS := $(TEST_DIR)/test_memoryconfig.cpp \
              $(TEST_DIR)/test_fifopolicy.cpp \
              $(TEST_DIR)/test_virtualallocator.cpp \
              $(TEST_DIR)/test_pagefaulthandler.cpp \
+             $(TEST_DIR)/test_runsimulation.cpp \
              $(TEST_DIR)/test_addresstranslator.cpp \
              $(TEST_DIR)/test_memorymanager.cpp
 TEST_BINS := $(patsubst $(TEST_DIR)/%.cpp,$(BIN_DIR)/%$(EXE_EXT),$(TEST_SRCS))
@@ -76,10 +77,13 @@ TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
                   $(SRCDIR)/domain/memory/TLB.cpp \
                   $(SRCDIR)/domain/replacement/FifoPolicy.cpp \
                   $(SRCDIR)/domain/stats/Stats.cpp \
+                  $(SRCDIR)/domain/stats/LogicalClock.cpp \
                   $(SRCDIR)/domain/translation/AddressTranslator.cpp \
                   $(SRCDIR)/domain/paging/VirtualAllocator.cpp \
                   $(SRCDIR)/domain/translation/PageFaultHandler.cpp \
-                  $(SRCDIR)/domain/MemoryManager.cpp
+                  $(SRCDIR)/domain/MemoryManager.cpp \
+                  $(SRCDIR)/application/Instruction.cpp \
+                  $(SRCDIR)/application/RunSimulation.cpp
 
 # ---------------------------------------------------------
 # Targets principales

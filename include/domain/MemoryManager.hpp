@@ -12,6 +12,7 @@
 #include "domain/paging/DirectoryTable.hpp"
 #include "domain/paging/VirtualAddress.hpp"
 #include "domain/replacement/IReplacementPolicy.hpp"
+#include "domain/stats/Tick.hpp"
 #include "domain/stats/Stats.hpp"
 #include "domain/translation/AddressTranslator.hpp"
 
@@ -32,6 +33,7 @@ public:
 
     // Consultas y observadores
     const Stats& getStats() const;
+    const Tick& getClock() const;
     const MemoryConfig& getConfig() const;
     std::string getPolicyName() const;
     const DirectoryTable& getDirectoryTable() const;
@@ -53,6 +55,7 @@ private:
     AddressTranslator translator_;
     std::unique_ptr<IReplacementPolicy> policy_;
     Stats stats_;
+    Tick clock_;
     VirtualAllocator allocator_;
     PageFaultHandler fault_handler_;
 };

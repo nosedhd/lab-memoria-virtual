@@ -112,7 +112,27 @@ void test_free_removes_frame_from_fifo_order() {
     assert(manager.getStats().getPageFaults() == faults_before + 1);
 }
 
+void test_clock_ticks_once_per_valid_access() {
+    const MemoryConfig config(4096, 256 * 1024);
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
+
+    manager.allocate(8192);
+    assert(manager.getClock().now() == 0);
+
+    manager.write(0, 1);
+    manager.read(0);
+    manager.write(4096, 2);
+    assert(manager.getClock().now() == 3);
+
+    try {
+        manager.read(900000);
+    } catch (const std::runtime_error&) {
+    }
+    assert(manager.getClock().now() == 3);
+}
+
 int main() {
+    test_clock_ticks_once_per_valid_access();
     test_write_read_and_statistics();
     test_access_without_allocation_is_segmentation_fault();
     test_access_outside_allocated_block_is_segmentation_fault();
