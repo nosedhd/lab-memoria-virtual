@@ -8,6 +8,7 @@ public:
     explicit PageTable(uint32_t page_table_entry_count);
  
     PageTableEntry& getEntry(uint32_t page_table_index);
+    const PageTableEntry& getEntry(uint32_t page_table_index) const;
 
 private:
     void validateIndex(uint32_t page_table_index) const;

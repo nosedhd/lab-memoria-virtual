@@ -1,27 +1,27 @@
-/*#pragma once
+#pragma once
+#include "domain/config/MemoryConfig.hpp"
+#include "domain/paging/DirectoryTable.hpp"
+#include "domain/paging/VirtualAddress.hpp"
+#include "domain/memory/TLB.hpp"
 
-#include <memory>
-#include "domain/PhysicalMemory.hpp"
-#include "domain/IReplacementPolicy.hpp"
-#include "domain/Command.hpp"
-#include "domain/Stats.hpp"
-#include "domain/PageTable.hpp"
-
-namespace application {
-
-class MMU {
-public:
-    MMU(domain::PhysicalMemory& mem,
-        std::unique_ptr<domain::IReplacementPolicy> policy);
-    void execute(const domain::Command& cmd);
-    const domain::Stats& getStats() const;
-private:
-    domain::PageTableL1 pageTable_;
-    domain::PhysicalMemory& memory_;
-    std::unique_ptr<domain::IReplacementPolicy> policy_;
-    domain::Stats stats_;
+struct TranslationResult {
+    uint32_t physical_address{0};
+    bool page_fault{false};
+    bool tlb_hit{false};
+    uint32_t frame{0};
 };
 
-} // namespace application
+class AddressTranslator {
+public:
+    AddressTranslator(DirectoryTable& directory, const MemoryConfig& config);
 
-*/
+    TranslationResult translate(const VirtualAddress& va);
+    void cacheTranslation(uint32_t vpn, uint32_t frame);
+    void invalidateTlb(uint32_t vpn);
+    void clearTlb();
+
+private:
+    DirectoryTable& directory_;
+    const MemoryConfig& config_;
+    TLB tlb_;
+};
