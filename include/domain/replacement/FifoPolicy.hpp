@@ -4,8 +4,7 @@
 #include <string>
 #include "IReplacementPolicy.hpp"
 
-namespace application {
-class FifoPolicy : public domain::IReplacementPolicy {
+class FifoPolicy : public IReplacementPolicy {
 public:
     ~FifoPolicy() override = default;
     void onLoad(unsigned int frame) override;
@@ -18,4 +17,3 @@ private:
 
     std::list<unsigned int> loadOrder_;
 };
-}

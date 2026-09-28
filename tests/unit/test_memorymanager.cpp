@@ -7,7 +7,7 @@
 
 void test_write_read_and_statistics() {
     const MemoryConfig config(4096, 256 * 1024);
-    auto policy = std::make_unique<application::FifoPolicy>();
+    auto policy = std::make_unique<FifoPolicy>();
     MemoryManager manager(config, std::move(policy));
 
     const uint32_t base_address = manager.allocate(4096);
@@ -23,7 +23,7 @@ void test_write_read_and_statistics() {
 
 void test_access_without_allocation_is_segmentation_fault() {
     const MemoryConfig config(4096, 256 * 1024);
-    MemoryManager manager(config, std::make_unique<application::FifoPolicy>());
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
 
     bool thrown = false;
     try {
@@ -37,7 +37,7 @@ void test_access_without_allocation_is_segmentation_fault() {
 
 void test_access_outside_allocated_block_is_segmentation_fault() {
     const MemoryConfig config(4096, 256 * 1024);
-    MemoryManager manager(config, std::make_unique<application::FifoPolicy>());
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
 
     manager.allocate(8192);
     manager.write(0, 42);
@@ -58,7 +58,7 @@ void test_access_outside_allocated_block_is_segmentation_fault() {
 
 void test_replaced_frame_does_not_leak_previous_data() {
     const MemoryConfig config(4096, 256 * 1024);
-    MemoryManager manager(config, std::make_unique<application::FifoPolicy>());
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
     const uint32_t page_size = config.getPageSize();
     const uint32_t frame_count = config.getFrameCount();
 
@@ -75,7 +75,7 @@ void test_replaced_frame_does_not_leak_previous_data() {
 
 void test_freed_frame_is_clean_when_reused() {
     const MemoryConfig config(4096, 256 * 1024);
-    MemoryManager manager(config, std::make_unique<application::FifoPolicy>());
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
     const uint32_t page_size = config.getPageSize();
     const uint32_t frame_count = config.getFrameCount();
 
@@ -92,7 +92,7 @@ void test_freed_frame_is_clean_when_reused() {
 
 void test_free_removes_frame_from_fifo_order() {
     const MemoryConfig config(4096, 256 * 1024);
-    MemoryManager manager(config, std::make_unique<application::FifoPolicy>());
+    MemoryManager manager(config, std::make_unique<FifoPolicy>());
     const uint32_t page_size = config.getPageSize();
     const uint32_t frame_count = config.getFrameCount();
 

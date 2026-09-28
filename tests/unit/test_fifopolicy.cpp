@@ -4,7 +4,7 @@
 #include "domain/replacement/FifoPolicy.hpp"
 
 void test_victims_follow_load_order() {
-    application::FifoPolicy policy;
+    FifoPolicy policy;
     policy.onLoad(3);
     policy.onLoad(1);
     policy.onLoad(2);
@@ -15,7 +15,7 @@ void test_victims_follow_load_order() {
 }
 
 void test_access_does_not_change_order() {
-    application::FifoPolicy policy;
+    FifoPolicy policy;
     policy.onLoad(0);
     policy.onLoad(1);
     policy.onAccess(0);
@@ -24,7 +24,7 @@ void test_access_does_not_change_order() {
 }
 
 void test_free_removes_frame_from_the_middle() {
-    application::FifoPolicy policy;
+    FifoPolicy policy;
     policy.onLoad(0);
     policy.onLoad(1);
     policy.onLoad(2);
@@ -38,7 +38,7 @@ void test_free_removes_frame_from_the_middle() {
 }
 
 void test_rejects_duplicate_load_and_unknown_free() {
-    application::FifoPolicy policy;
+    FifoPolicy policy;
     policy.onLoad(5);
 
     bool duplicate_thrown = false;
@@ -59,7 +59,7 @@ void test_rejects_duplicate_load_and_unknown_free() {
 }
 
 void test_empty_policy_has_no_victim() {
-    application::FifoPolicy policy;
+    FifoPolicy policy;
 
     bool thrown = false;
     try {

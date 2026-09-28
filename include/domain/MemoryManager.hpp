@@ -16,7 +16,7 @@
 class MemoryManager {
 public:
     MemoryManager(const MemoryConfig& config,
-                  std::unique_ptr<domain::IReplacementPolicy> policy);
+                  std::unique_ptr<IReplacementPolicy> policy);
 
     // Operaciones principales del simulador
     uint32_t allocate(uint32_t bytes);
@@ -33,6 +33,9 @@ public:
     const PhysicalMemory& getPhysicalMemory() const;
 
 private:
+    enum class AccessType { Read, Write };
+
+    uint32_t resolvePhysicalAddress(uint32_t virtual_address, AccessType access_type);
     uint32_t handlePageFault(const VirtualAddress& va);
 
     MemoryConfig config_;
@@ -40,7 +43,7 @@ private:
     PhysicalMemory physical_memory_;
     FrameTable frame_table_;
     AddressTranslator translator_;
-    std::unique_ptr<domain::IReplacementPolicy> policy_;
+    std::unique_ptr<IReplacementPolicy> policy_;
     Stats stats_;
 
     uint32_t next_allocated_virtual_address_{0};

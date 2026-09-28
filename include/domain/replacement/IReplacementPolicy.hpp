@@ -2,7 +2,6 @@
 
 #include <string>
 
-namespace domain {
 class IReplacementPolicy {
 public:
     virtual ~IReplacementPolicy() = default;
@@ -12,4 +11,4 @@ public:
     virtual unsigned int selectVictim() = 0;
     virtual std::string name() const = 0;
 };
-}
+

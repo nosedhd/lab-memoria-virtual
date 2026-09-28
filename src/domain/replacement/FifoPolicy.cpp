@@ -4,8 +4,6 @@
 #include <stdexcept>
 #include <string>
 
-namespace application {
-
 void FifoPolicy::onLoad(unsigned int frame) {
     if (contains(frame)) {
         throw std::logic_error(
@@ -41,5 +39,3 @@ unsigned int FifoPolicy::selectVictim() {
 bool FifoPolicy::contains(unsigned int frame) const {
     return std::find(loadOrder_.begin(), loadOrder_.end(), frame) != loadOrder_.end();
 }
-
-}  
