@@ -11,7 +11,7 @@ struct TLBEntry {
     uint32_t vpn{0};
     uint32_t frame{0};
     bool valid{false};
-    uint64_t last_accessed{0}; // Para LRU dentro de la TLB
+    uint64_t last_accessed{0};
 };
 
 class TLB {

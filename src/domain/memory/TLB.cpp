@@ -55,7 +55,7 @@ bool TLB::update(uint32_t vpn, uint32_t frame) {
             return true;
         }
     }
-    return false; // No estaba en la TLB
+    return false; 
 }
 
 void TLB::invalidate(uint32_t vpn) {

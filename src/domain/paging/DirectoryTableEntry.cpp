@@ -4,8 +4,7 @@
 #include <string>
 
 DirectoryTableEntry::DirectoryTableEntry()
-    : ptn_(0),
-      valid_bit_(false) {}
+    : ptn_(0), valid_bit_(false) {}
 
 uint32_t DirectoryTableEntry::getPtn() const {
     return ptn_;

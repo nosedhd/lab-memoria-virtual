@@ -8,7 +8,7 @@ class FifoPolicy : public IReplacementPolicy {
 public:
     ~FifoPolicy() override = default;
     void onLoad(unsigned int frame) override;
-    void onAccess(unsigned int frame) override;   // no hace nada en FIFO
+    void onAccess(unsigned int frame) override;  
     void onFree(unsigned int frame) override;
     unsigned int selectVictim() override;
     std::string name() const override { return "FIFO"; }
