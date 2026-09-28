@@ -9,6 +9,7 @@ public:
     bool getValidBit() const;
     bool getAccessedBit() const;
     bool getDirtyBit() const;
+    bool getAllocatedBit() const;
 
     void allocate();
     void load(uint32_t pfn);
@@ -20,4 +21,5 @@ private:
     bool valid_bit_;
     bool accessed_bit_;
     bool dirty_bit_;
+    bool allocated_bit_;
 };

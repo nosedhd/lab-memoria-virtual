@@ -6,7 +6,8 @@ PageTableEntry::PageTableEntry()
     :pfn_(0),
     valid_bit_(false),
     accessed_bit_(false),
-    dirty_bit_(false)
+    dirty_bit_(false),
+    allocated_bit_(false)
 {
 
 }
@@ -26,6 +27,17 @@ bool PageTableEntry::getAccessedBit() const{
 bool PageTableEntry::getDirtyBit() const{
     return dirty_bit_;
 };
+
+bool PageTableEntry::getAllocatedBit() const {
+    return allocated_bit_;
+}
+
+void PageTableEntry::allocate() {
+    if (allocated_bit_) {
+        throw std::logic_error("La pagina ya esta reservada");
+    }
+    allocated_bit_ = true;
+}
 
 void PageTableEntry::load(uint32_t pfn){
     if (valid_bit_) {

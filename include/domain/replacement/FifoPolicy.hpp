@@ -1,6 +1,6 @@
 #pragma once
 
-#include <queue>
+#include <list>
 #include <string>
 #include "IReplacementPolicy.hpp"
 
@@ -10,9 +10,12 @@ public:
     ~FifoPolicy() override = default;
     void onLoad(unsigned int frame) override;
     void onAccess(unsigned int frame) override;   // no hace nada en FIFO
+    void onFree(unsigned int frame) override;
     unsigned int selectVictim() override;
     std::string name() const override { return "FIFO"; }
 private:
-    std::queue<unsigned int> loadOrder_;
+    bool contains(unsigned int frame) const;
+
+    std::list<unsigned int> loadOrder_;
 };
 }

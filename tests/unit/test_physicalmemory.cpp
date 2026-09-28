@@ -37,6 +37,29 @@ void test_read_and_write() {
     assert(mem.readByte(0) == 77);
 }
 
+void test_clear_range() {
+    PhysicalMemory mem(8192);
+    mem.writeByte(4095, 11);
+    mem.writeByte(4096, 22);
+    mem.writeByte(5000, 33);
+    mem.writeByte(8191, 44);
+
+    mem.clearRange(4096, 4096);
+
+    assert(mem.readByte(4095) == 11);
+    assert(mem.readByte(4096) == 0);
+    assert(mem.readByte(5000) == 0);
+    assert(mem.readByte(8191) == 0);
+
+    bool thrown = false;
+    try {
+        mem.clearRange(4096, 4097);
+    } catch (const std::out_of_range&) {
+        thrown = true;
+    }
+    assert(thrown);
+}
+
 void test_rejects_invalid_arguments() {
     // Tamaño 0 debe lanzar invalid_argument
     bool thrown = false;
@@ -69,6 +92,7 @@ void test_rejects_invalid_arguments() {
 }
 
 int main() {
+    test_clear_range();
     test_initialization();
     test_read_and_write();
     test_rejects_invalid_arguments();

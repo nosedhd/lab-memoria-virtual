@@ -1,10 +1,14 @@
 #include "domain/translation/AddressTranslator.hpp"
+#include <stdexcept>
+#include <string>
 
-AddressTranslator::AddressTranslator(
-        DirectoryTable& directory, const MemoryConfig& config)
-        : directory_(directory),
-            config_(config),
-            tlb_() {}
+AddressTranslator::AddressTranslator(DirectoryTable& directory, const MemoryConfig& config)
+    : directory_(directory),
+    config_(config),
+    tlb_()
+    {
+
+    }
 
 TranslationResult AddressTranslator::translate(const VirtualAddress& va) {
     TranslationResult result;
@@ -21,12 +25,15 @@ TranslationResult AddressTranslator::translate(const VirtualAddress& va) {
     const PageTable* page_table =
         directory_.getPageTable(va.getDirectoryIndex());
     if (page_table == nullptr) {
-        result.page_fault = true;
-        return result;
+        throwSegmentationFault(va);
     }
 
     const PageTableEntry& page_table_entry =
         page_table->getEntry(va.getPageTableIndex());
+    if (!page_table_entry.getAllocatedBit()) {
+        throwSegmentationFault(va);
+    }
+
     if (!page_table_entry.getValidBit()) {
         result.page_fault = true;
         return result;
@@ -51,3 +58,8 @@ void AddressTranslator::clearTlb() {
     tlb_.clear();
 }
 
+void AddressTranslator::throwSegmentationFault(const VirtualAddress& va) {
+    throw std::runtime_error(
+        "Segmentation fault: la direccion virtual " +
+        std::to_string(va.getRaw()) + " no fue reservada");
+}

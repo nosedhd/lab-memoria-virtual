@@ -37,16 +37,24 @@ uint32_t MemoryManager::allocate(uint32_t bytes) {
     }
 
     const uint32_t start_address = next_allocated_virtual_address_;
+
+    for (uint64_t page = 0; page < pages; ++page) {
+        const VirtualAddress page_address(
+            static_cast<uint32_t>(start_address + page * page_size), config_);
+        PageTable& page_table = directory_.getOrCreatePageTable(
+            page_address.getDirectoryIndex(), config_.getPageTableEntryCount());
+        page_table.getEntry(page_address.getPageTableIndex()).allocate();
+    }
+
     next_allocated_virtual_address_ +=
         static_cast<uint32_t>(reserved_bytes);
     return start_address;
 }
 
 void MemoryManager::write(uint32_t virtual_address, uint8_t value) {
-    stats_.recordAccess();
-
     const VirtualAddress va(virtual_address, config_);
     TranslationResult translation = translator_.translate(va);
+    stats_.recordAccess();
     if (translation.tlb_hit) {
         stats_.recordTlbHit();
     }
@@ -57,19 +65,17 @@ void MemoryManager::write(uint32_t virtual_address, uint8_t value) {
             translation.frame * config_.getPageSize() + va.getOffset();
     }
 
-    PageTable& page_table = directory_.getOrCreatePageTable(
-        va.getDirectoryIndex(), config_.getPageTableEntryCount());
-    PageTableEntry& entry = page_table.getEntry(va.getPageTableIndex());
+    PageTable* page_table = directory_.getPageTable(va.getDirectoryIndex());
+    PageTableEntry& entry = page_table->getEntry(va.getPageTableIndex());
     entry.recordAccess(true);
     policy_->onAccess(translation.frame);
     physical_memory_.writeByte(translation.physical_address, value);
 }
 
 uint8_t MemoryManager::read(uint32_t virtual_address) {
-    stats_.recordAccess();
-
     const VirtualAddress va(virtual_address, config_);
     TranslationResult translation = translator_.translate(va);
+    stats_.recordAccess();
     if (translation.tlb_hit) {
         stats_.recordTlbHit();
     }
@@ -80,9 +86,8 @@ uint8_t MemoryManager::read(uint32_t virtual_address) {
             translation.frame * config_.getPageSize() + va.getOffset();
     }
 
-    PageTable& page_table = directory_.getOrCreatePageTable(
-        va.getDirectoryIndex(), config_.getPageTableEntryCount());
-    PageTableEntry& entry = page_table.getEntry(va.getPageTableIndex());
+    PageTable* page_table = directory_.getPageTable(va.getDirectoryIndex());
+    PageTableEntry& entry = page_table->getEntry(va.getPageTableIndex());
     entry.recordAccess(false);
     policy_->onAccess(translation.frame);
     return physical_memory_.readByte(translation.physical_address);
@@ -105,6 +110,7 @@ void MemoryManager::free(uint32_t virtual_address) {
     const uint32_t frame = entry.getPfn();
     entry.invalidate();
     translator_.invalidateTlb(va.getVpn());
+    policy_->onFree(frame);
     frame_table_.freeFrame(frame);
 }
 
@@ -159,9 +165,11 @@ uint32_t MemoryManager::handlePageFault(const VirtualAddress& va) {
         stats_.recordReplacement();
     }
 
-    PageTable& page_table = directory_.getOrCreatePageTable(
-        va.getDirectoryIndex(), config_.getPageTableEntryCount());
-    PageTableEntry& entry = page_table.getEntry(va.getPageTableIndex());
+    physical_memory_.clearRange(
+        frame * config_.getPageSize(), config_.getPageSize());
+
+    PageTable* page_table = directory_.getPageTable(va.getDirectoryIndex());
+    PageTableEntry& entry = page_table->getEntry(va.getPageTableIndex());
     entry.load(frame);
     policy_->onLoad(frame);
     translator_.cacheTranslation(va.getVpn(), frame);

@@ -21,6 +21,8 @@ public:
     void clearTlb();
 
 private:
+    [[noreturn]] static void throwSegmentationFault(const VirtualAddress& va);
+
     DirectoryTable& directory_;
     const MemoryConfig& config_;
     TLB tlb_;

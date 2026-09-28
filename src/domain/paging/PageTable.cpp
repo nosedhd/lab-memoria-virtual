@@ -5,12 +5,12 @@
 PageTable::PageTable(uint32_t page_table_entry_count)
     : entries_(page_table_entry_count) {}
  
-PageTableEntry& PageTable::getEntry(uint32_t page_table_index) { // Es una referencia no constante, se puede modificar
+PageTableEntry& PageTable::getEntry(uint32_t page_table_index) { 
     validateIndex(page_table_index);
     return entries_[page_table_index];
 }
 
-const PageTableEntry& PageTable::getEntry( // Solo Consulta, no modifica
+const PageTableEntry& PageTable::getEntry( 
     uint32_t page_table_index) const {
     validateIndex(page_table_index);
     return entries_[page_table_index];

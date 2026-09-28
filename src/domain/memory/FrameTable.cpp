@@ -14,7 +14,6 @@ FrameTable::FrameTable(uint32_t frame_count)
     }
 }
 
-
 uint32_t FrameTable::getFrameCount() const {
     return frame_count_;
 }
@@ -51,7 +50,6 @@ void FrameTable::mapFrame(
 
     frames_[frame] = FrameInfo{true, vpn, dir_index, page_table_index};
 }
-
 
 void FrameTable::freeFrame(uint32_t frame) {
     validateFrameIndex(frame);
