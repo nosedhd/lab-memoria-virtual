@@ -8,7 +8,7 @@ struct CommandLineOptions {
     std::string input_path;
     uint32_t page_size{4096};
     uint32_t physical_memory_size{256 * 1024};
-    std::string csv_path{"reporte.csv"};
+    std::string csv_path{"docs/reporte.csv"};
 };
 
 CommandLineOptions parseCommandLine(const std::vector<std::string>& arguments);

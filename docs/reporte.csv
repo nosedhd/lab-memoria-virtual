@@ -1,0 +1,4 @@
+archivo,politica,tamano_pagina,memoria_fisica,marcos,instrucciones,accesos,fallos_pagina,hit_rate,reemplazos,hits_tlb,ticks,errores,detalle_errores
+tests/test1_basico.txt,FIFO,4096,262144,64,5,4,2,50.00,0,2,4,0,
+tests/test2_fallos.txt,FIFO,4096,262144,64,0,0,0,0.00,0,0,0,0,
+tests/test3_reemplazo.txt,FIFO,4096,262144,64,0,0,0,0.00,0,0,0,0,
