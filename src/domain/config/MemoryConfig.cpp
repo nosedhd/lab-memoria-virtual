@@ -1,6 +1,7 @@
 #include "domain/config/MemoryConfig.hpp"
-#include <string>
 #include <cmath>
+#include <stdexcept>
+#include <string>
 
 MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
         : page_size_(page_size),
@@ -10,16 +11,27 @@ MemoryConfig::MemoryConfig(uint32_t page_size, uint32_t physical_memory_size)
             directory_index_bits_(0),
             page_table_index_bits_(0) {
         if (!isPowerOfTwo(page_size)) {
-            throw std::invalid_argument("El tamaño de la pagina debe ser potencia de dos");
+            throw std::invalid_argument(
+                "El tamano de pagina debe ser potencia de dos (recibido: " +
+                std::to_string(page_size) + " bytes)");
         }
         if (!isPageSizeInRange(page_size)) {
-            throw std::invalid_argument("El tamaño de la pagina no esta dentro del rango permitido");
+            throw std::invalid_argument(
+                "El tamano de pagina debe estar entre " + std::to_string(MIN_PAGE_SIZE) +
+                " y " + std::to_string(MAX_PAGE_SIZE) + " bytes (recibido: " +
+                std::to_string(page_size) + ")");
         }
         if (!isPhysicalMemoryInRange(physical_memory_size)) {
-            throw std::invalid_argument("El tamaño de la memoria no esta dentro del rango permitido");
+            throw std::invalid_argument(
+                "La memoria fisica debe estar entre " + std::to_string(MIN_PHYSICAL_MEMORY_SIZE) +
+                " y " + std::to_string(MAX_PHYSICAL_MEMORY_SIZE) + " bytes (recibido: " +
+                std::to_string(physical_memory_size) + ")");
         }
         if (!isMultipleOfPageSize(physical_memory_size, page_size)) {
-            throw std::invalid_argument("La memoria fisica debe ser multiplo del tamaño de la pagina");   
+            throw std::invalid_argument(
+                "La memoria fisica (" + std::to_string(physical_memory_size) +
+                " bytes) debe ser multiplo del tamano de pagina (" +
+                std::to_string(page_size) + " bytes)");
         }
 
         frame_count_ = physical_memory_size / page_size;
