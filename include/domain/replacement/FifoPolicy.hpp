@@ -1,19 +1,19 @@
 #pragma once
 
-#include <list>
+#include <queue>
 #include <string>
+#include <unordered_set>
 #include "IReplacementPolicy.hpp"
 
 class FifoPolicy : public IReplacementPolicy {
 public:
     ~FifoPolicy() override = default;
     void onLoad(unsigned int frame) override;
-    void onAccess(unsigned int frame) override;  
+    void onAccess(unsigned int frame) override;
     void onFree(unsigned int frame) override;
     unsigned int selectVictim() override;
     std::string name() const override { return "FIFO"; }
 private:
-    bool contains(unsigned int frame) const;
-
-    std::list<unsigned int> loadOrder_;
+    std::queue<unsigned int> loadOrder_;
+    std::unordered_set<unsigned int> queuedFrames_;
 };

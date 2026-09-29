@@ -12,15 +12,15 @@ uint32_t PageTableEntry::getPfn() const{
 
 bool PageTableEntry::getValidBit() const{
     return valid_bit_;
-};
+}
 
 bool PageTableEntry::getAccessedBit() const{
     return accessed_bit_;
-};
+}
 
 bool PageTableEntry::getDirtyBit() const{
     return dirty_bit_;
-};
+}
 
 bool PageTableEntry::getAllocatedBit() const {
     return allocated_bit_;

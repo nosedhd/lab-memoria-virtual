@@ -48,7 +48,16 @@ SOURCES := $(wildcard $(SRCDIR)/*.cpp) \
 
 OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES))
 
-# Tests implementados actualmente. test_mmu.cpp se incorporara cuando tenga main.
+# Archivos .d generados por -MMD: le dicen a make que headers usa cada .cpp,
+# para recompilarlo si alguno cambia. Sin esto, cambiar un .hpp puede dejar
+# objetos desactualizados que fallan en ejecucion.
+DEPS := $(OBJECTS:.o=.d)
+
+# Los ejecutables de prueba se compilan desde los .cpp; dependen de todos los
+# headers para recompilarse cuando cambia cualquiera.
+HEADERS := $(wildcard include/*/*.hpp include/*/*/*.hpp)
+
+# Pruebas unitarias.
 TEST_SRCS := $(TEST_DIR)/test_memoryconfig.cpp \
              $(TEST_DIR)/test_virtualaddress.cpp \
              $(TEST_DIR)/test_directorytableentry.cpp \
@@ -79,7 +88,7 @@ TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
                   $(SRCDIR)/domain/memory/TLB.cpp \
                   $(SRCDIR)/domain/replacement/FifoPolicy.cpp \
                   $(SRCDIR)/domain/stats/Stats.cpp \
-                  $(SRCDIR)/domain/stats/LogicalClock.cpp \
+                  $(SRCDIR)/domain/stats/Tick.cpp \
                   $(SRCDIR)/domain/translation/AddressTranslator.cpp \
                   $(SRCDIR)/domain/paging/VirtualAllocator.cpp \
                   $(SRCDIR)/domain/translation/PageFaultHandler.cpp \
@@ -103,7 +112,9 @@ $(TARGET): $(OBJECTS)
 # Regla genérica: compila cada .cpp preservando su subcarpeta dentro de build/
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@$(call MKDIR,$(dir $@))
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+
+-include $(DEPS)
 
 clean:
 ifeq ($(OS),Windows_NT)
@@ -128,6 +139,6 @@ else
 endif
 	@echo Todos los tests pasaron.
 
-$(BIN_DIR)/%$(EXE_EXT): $(TEST_DIR)/%.cpp $(TEST_CORE_SRCS)
+$(BIN_DIR)/%$(EXE_EXT): $(TEST_DIR)/%.cpp $(TEST_CORE_SRCS) $(HEADERS)
 	@$(call MKDIR,$(@D))
 	$(CXX) $(CXXFLAGS) $< $(TEST_CORE_SRCS) -o $@
