@@ -60,6 +60,8 @@ TEST_SRCS := $(TEST_DIR)/test_memoryconfig.cpp \
              $(TEST_DIR)/test_virtualallocator.cpp \
              $(TEST_DIR)/test_pagefaulthandler.cpp \
              $(TEST_DIR)/test_runsimulation.cpp \
+             $(TEST_DIR)/test_documentreader.cpp \
+             $(TEST_DIR)/test_infrastructure.cpp \
              $(TEST_DIR)/test_addresstranslator.cpp \
              $(TEST_DIR)/test_memorymanager.cpp
 TEST_BINS := $(patsubst $(TEST_DIR)/%.cpp,$(BIN_DIR)/%$(EXE_EXT),$(TEST_SRCS))
@@ -83,7 +85,10 @@ TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
                   $(SRCDIR)/domain/translation/PageFaultHandler.cpp \
                   $(SRCDIR)/domain/MemoryManager.cpp \
                   $(SRCDIR)/application/Instruction.cpp \
-                  $(SRCDIR)/application/RunSimulation.cpp
+                  $(SRCDIR)/application/RunSimulation.cpp \
+                  $(SRCDIR)/infrastructure/DocumentReader.cpp \
+                  $(SRCDIR)/infrastructure/CsvReportWriter.cpp \
+                  $(SRCDIR)/infrastructure/CommandLineOptions.cpp
 
 # ---------------------------------------------------------
 # Targets principales
@@ -109,7 +114,9 @@ else
 	$(RM) $(TARGET)
 endif
 
-# Uso: make run ARGS="tests/test1_basico.txt"
+# Uso: make run ARGS="tests/test2_fallos.txt --page-size 8192"
+ARGS ?= tests/test1_basico.txt
+
 run: all
 	./$(TARGET) $(ARGS)
 
