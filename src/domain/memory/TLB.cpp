@@ -1,57 +1,61 @@
 #include "domain/memory/TLB.hpp"
+#include "domain/replacement/LRUPolicy.hpp"
+#include <stdexcept>
 
-#include <algorithm>
+TLB::TLB(size_t capacity)
+    : entries_(capacity),
+      policy_(std::make_unique<LRUPolicy>(static_cast<unsigned int>(capacity))) {
+    if (capacity == 0) {
+        throw std::invalid_argument("La capacidad de la TLB debe ser mayor a 0.");
+    }
+}
 
 std::optional<uint32_t> TLB::lookup(uint32_t vpn) {
-    for (auto& entry : entries_) {
-        if (entry.valid && entry.vpn == vpn) {
-            entry.last_accessed = ++access_counter_;
-            return entry.frame;
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (entries_[i].valid && entries_[i].vpn == vpn) {
+            policy_->onAccess(static_cast<unsigned int>(i)); // Registra el hit en LRU
+            return entries_[i].frame;
         }
     }
-
-    return std::nullopt;
+    return std::nullopt; // TLB Miss
 }
 
 void TLB::insert(uint32_t vpn, uint32_t frame) {
-    // PASO 1 (UPDATE): Si el VPN ya existe en la TLB, actualizar su marco y tiempo:
-    for (auto& entry : entries_) {
-        if (entry.valid && entry.vpn == vpn) {
-            entry.frame = frame;
-            entry.last_accessed = ++access_counter_;
+    // PASO 1 (UPDATE): Si el VPN ya existe, actualizar marco y registrar acceso
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (entries_[i].valid && entries_[i].vpn == vpn) {
+            entries_[i].frame = frame;
+            policy_->onAccess(static_cast<unsigned int>(i));
             return;
         }
     }
 
-    // PASO 2: Si no existía, buscar una entrada vacía:
-    for (auto& entry : entries_) {
-        if (!entry.valid) {
-            entry.vpn = vpn;
-            entry.frame = frame;
-            entry.valid = true;
-            entry.last_accessed = ++access_counter_;
+    // PASO 2: Buscar una entrada libre
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (!entries_[i].valid) {
+            entries_[i].vpn = vpn;
+            entries_[i].frame = frame;
+            entries_[i].valid = true;
+            policy_->onLoad(static_cast<unsigned int>(i));
             return;
         }
     }
 
-    // PASO 3: Si la TLB está llena, desalojar la víctima LRU:
-    auto lru_entry = std::min_element(
-        entries_.begin(), entries_.end(),
-        [](const TLBEntry& a, const TLBEntry& b) {
-            return a.last_accessed < b.last_accessed;
-        });
+    // PASO 3: TLB llena — pedir víctima LRU a la política
+    const unsigned int victim = policy_->selectVictim();
+    policy_->onFree(victim);
 
-    lru_entry->vpn = vpn;
-    lru_entry->frame = frame;
-    lru_entry->valid = true;
-    lru_entry->last_accessed = ++access_counter_;
+    entries_[victim].vpn = vpn;
+    entries_[victim].frame = frame;
+    entries_[victim].valid = true;
+    policy_->onLoad(victim);
 }
 
 bool TLB::update(uint32_t vpn, uint32_t frame) {
-    for (auto& entry : entries_) {
-        if (entry.valid && entry.vpn == vpn) {
-            entry.frame = frame;
-            entry.last_accessed = ++access_counter_;
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (entries_[i].valid && entries_[i].vpn == vpn) {
+            entries_[i].frame = frame;
+            policy_->onAccess(static_cast<unsigned int>(i));
             return true;
         }
     }
@@ -59,18 +63,20 @@ bool TLB::update(uint32_t vpn, uint32_t frame) {
 }
 
 void TLB::invalidate(uint32_t vpn) {
-    for (auto& entry : entries_) {
-        if (entry.valid && entry.vpn == vpn) {
-            entry.valid = false;
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (entries_[i].valid && entries_[i].vpn == vpn) {
+            entries_[i].valid = false;
+            policy_->onFree(static_cast<unsigned int>(i));
             return;
         }
     }
 }
 
 void TLB::clear() {
-    for (auto& entry : entries_) {
-        entry.valid = false;
+    for (size_t i = 0; i < entries_.size(); ++i) {
+        if (entries_[i].valid) {
+            policy_->onFree(static_cast<unsigned int>(i));
+        }
+        entries_[i].valid = false;
     }
-    access_counter_ = 0;
 }
-
