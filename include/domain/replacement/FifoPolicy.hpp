@@ -2,7 +2,7 @@
 
 #include <list>
 #include <string>
-#include "IReplacementPolicy.hpp"
+#include "domain/replacement/IReplacementPolicy.hpp"
 
 class FifoPolicy : public IReplacementPolicy {
 public:

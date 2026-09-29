@@ -72,6 +72,7 @@ TEST_CORE_SRCS := $(SRCDIR)/domain/config/MemoryConfig.cpp \
                   $(SRCDIR)/domain/memory/PhysicalMemory.cpp \
                   $(SRCDIR)/domain/memory/TLB.cpp \
                   $(SRCDIR)/domain/replacement/FifoPolicy.cpp \
+                  $(SRCDIR)/domain/replacement/LRUPolicy.cpp \
                   $(SRCDIR)/domain/stats/Stats.cpp \
                   $(SRCDIR)/domain/translation/AddressTranslator.cpp \
                   $(SRCDIR)/domain/MemoryManager.cpp
