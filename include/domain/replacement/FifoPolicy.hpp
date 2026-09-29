@@ -2,12 +2,9 @@
 
 #include <queue>
 #include <string>
-<<<<<<< HEAD
 #include <unordered_set>
 #include "IReplacementPolicy.hpp"
-=======
 #include "domain/replacement/IReplacementPolicy.hpp"
->>>>>>> c614b7905b4a2c4d0c2d90c25fa1f99ef56fb78e
 
 class FifoPolicy : public IReplacementPolicy {
 public:
