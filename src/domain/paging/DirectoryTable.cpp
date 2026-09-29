@@ -4,8 +4,7 @@
 #include <string>
 
 DirectoryTable::DirectoryTable(uint32_t entry_count)
-    : entries_(entry_count),
-      page_tables_(entry_count) {}
+    : entries_(entry_count), page_tables_(entry_count) {}
 
 DirectoryTableEntry& DirectoryTable::getEntry(uint32_t index) {
     validateIndex(index);

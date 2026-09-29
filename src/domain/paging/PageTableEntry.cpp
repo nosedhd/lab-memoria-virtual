@@ -3,14 +3,8 @@
 #include <string>
 
 PageTableEntry::PageTableEntry()
-    :pfn_(0),
-    valid_bit_(false),
-    accessed_bit_(false),
-    dirty_bit_(false),
-    allocated_bit_(false)
-{
-
-}
+    :pfn_(0), valid_bit_(false), accessed_bit_(false),
+    dirty_bit_(false), allocated_bit_(false) {}
 
 uint32_t PageTableEntry::getPfn() const{
    return pfn_;

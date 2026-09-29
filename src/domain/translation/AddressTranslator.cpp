@@ -3,12 +3,8 @@
 #include <string>
 
 AddressTranslator::AddressTranslator(DirectoryTable& directory, const MemoryConfig& config)
-    : directory_(directory),
-    config_(config),
-    tlb_()
-    {
-
-    }
+    : directory_(directory), config_(config),
+    tlb_() {}
 
 TranslationResult AddressTranslator::translate(const VirtualAddress& va) {
     TranslationResult result;
@@ -16,20 +12,17 @@ TranslationResult AddressTranslator::translate(const VirtualAddress& va) {
     const std::optional<uint32_t> cached_frame = tlb_.lookup(va.getVpn());
     if (cached_frame.has_value()) {
         result.frame = cached_frame.value();
-        result.physical_address =
-            result.frame * config_.getPageSize() + va.getOffset();
+        result.physical_address = result.frame * config_.getPageSize() + va.getOffset();
         result.tlb_hit = true;
         return result;
     }
 
-    const PageTable* page_table =
-        directory_.getPageTable(va.getDirectoryIndex());
+    const PageTable* page_table = directory_.getPageTable(va.getDirectoryIndex());
     if (page_table == nullptr) {
         throwSegmentationFault(va);
     }
 
-    const PageTableEntry& page_table_entry =
-        page_table->getEntry(va.getPageTableIndex());
+    const PageTableEntry& page_table_entry = page_table->getEntry(va.getPageTableIndex());
     if (!page_table_entry.getAllocatedBit()) {
         throwSegmentationFault(va);
     }
@@ -40,8 +33,8 @@ TranslationResult AddressTranslator::translate(const VirtualAddress& va) {
     }
 
     result.frame = page_table_entry.getPfn();
-    result.physical_address =
-        result.frame * config_.getPageSize() + va.getOffset();
+    result.physical_address = result.frame * config_.getPageSize() + va.getOffset();
+    
     tlb_.insert(va.getVpn(), result.frame);
     return result;
 }

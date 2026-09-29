@@ -3,15 +3,12 @@
 #include <cmath>
 
 VirtualAddress::VirtualAddress(uint32_t raw_address, const MemoryConfig& config)
-	: raw_address_(raw_address),
-	  directory_index_(0),
-	  page_table_index_(0),
-	  offset_(0),
-	  vpn_(0) {
+	: raw_address_(raw_address), directory_index_(0),
+	  page_table_index_(0), offset_(0), vpn_(0)
+{
 	if (!isValidVirtualAddress(raw_address, config)) {
 		throw std::invalid_argument("La configuracion de bits no es valida");
 	}
-
 	directory_index_ = computeDirectoryIndex(raw_address, config);
 	page_table_index_ = computePageTableIndex(raw_address, config);
 	offset_ = computeOffset(raw_address, config);
@@ -44,8 +41,7 @@ bool VirtualAddress::isValidVirtualAddress(uint32_t raw_address, const MemoryCon
 	const uint32_t directory_bits = config.getDirectoryIndexBits();
 	const uint32_t page_table_bits = config.getPageTableIndexBits();
 
-	return offset_bits + directory_bits + page_table_bits <=
-		   MemoryConfig::VIRTUAL_ADDRESS_BITS;
+	return offset_bits + directory_bits + page_table_bits <= MemoryConfig::VIRTUAL_ADDRESS_BITS;
 }
 
 uint32_t VirtualAddress::computeDirectoryIndex(uint32_t raw_address, const MemoryConfig& config) {
